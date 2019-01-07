@@ -4,6 +4,7 @@ from datetime import datetime
 import json
 import feedparser
 import ssl
+from .models import Headlines
 
 if hasattr(ssl, '_create_unverified_context'):
     ssl._create_default_https_context = ssl._create_unverified_context
@@ -43,6 +44,7 @@ def headlines(request):
     # Fetch the feed
     feed = feedparser.parse(RSS_FEEDS[desired_rss_feed]["rss_link"])
 
+    visited_at = request.COOKIES.get('visited_at')
 
     headlines = [
                     {"title": entry["title"], "link": entry["link"]}
@@ -52,9 +54,13 @@ def headlines(request):
     result = ' '.join([
                         '<li>{} - <a href={}>link</a></li>'.format(obj['title'], obj['link'])
                         for obj in headlines
-                    ])
+                    ]) + '<br /> <p>Visited at: {}</p>'.format(visited_at[:-7])
 
-    visited_at = request.COOKIES.get('visited_at')
+    for obj in headlines:
+        if not Headlines.objects.filter(title=obj['title']).exists():
+            headline = Headlines(title=obj['title'], link=obj['link'], time_added=datetime.now())
+            headline.save()
+
 
     response = HttpResponse(result)
     response.set_cookie("visited_at", str(datetime.now()), max_age=3600 * 24)
