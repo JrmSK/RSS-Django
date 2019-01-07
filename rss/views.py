@@ -25,7 +25,9 @@ def index(request):
 
 
 def feeds(request):
-    return HttpResponse(json.dumps(RSS_FEEDS), content_type="application/json")
+    result = ['{}: {} - {}'.format(feed, RSS_FEEDS[feed]['title'], RSS_FEEDS[feed]['rss_link']) for feed in RSS_FEEDS]
+    print(result)
+    return render(request, 'rss/chooseFeed.html', {'result': result})
 
 
 def headlines(request):
