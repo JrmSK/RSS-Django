@@ -1,7 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from datetime import datetime
 import json
 import feedparser
+import ssl
+
+if hasattr(ssl, '_create_unverified_context'):
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 
 RSS_FEEDS = {
@@ -31,7 +36,27 @@ def feeds(request):
 
 
 def headlines(request):
-    desired_rss_feed = request.query.get("feed", "1")
+    desired_rss_feed = request.GET.get("feed")
     if desired_rss_feed not in RSS_FEEDS:
-        desired_rss_feed = '1'
-    return HttpResponse(response)
+        desired_rss_feed = "1"
+
+    # Fetch the feed
+    feed = feedparser.parse(RSS_FEEDS[desired_rss_feed]["rss_link"])
+
+
+    headlines = [
+                    {"title": entry["title"], "link": entry["link"]}
+                    for entry in feed["entries"]
+                ]
+
+    result = ' '.join([
+                        '<li>{} - <a href={}>link</a></li>'.format(obj['title'], obj['link'])
+                        for obj in headlines
+                    ])
+
+    visited_at = request.COOKIES.get('visited_at')
+
+    response = HttpResponse(result)
+    response.set_cookie("visited_at", str(datetime.now()), max_age=3600 * 24)
+
+    return response
