@@ -10,13 +10,19 @@ if hasattr(ssl, '_create_unverified_context'):
 
 
 def index(request):
-    desired_rss_feed = request.GET.get("feed")
-    if desired_rss_feed not in RSS_FEEDS:
-        desired_rss_feed = "1"
 
-    headlines = get_headlines(desired_rss_feed)
+    # desired_rss_feed = request.GET.get("feed")
+    # if desired_rss_feed not in RSS_FEEDS:
+    #     desired_rss_feed = "1"
+    #
+    # headlines = get_headlines(desired_rss_feed)
+    #
+    # return render(request, 'rss/rss.html', {"headlines": headlines})
+    first_visit = True
+    if request.COOKIES.get('visited_at'):
+        first_visit = False
 
-    return render(request, 'rss/rss.html', {"headlines": headlines})
+    return render(request, 'rss/welcome.html', {'first_visit': first_visit})
 
 
 def feeds(request):
@@ -30,12 +36,9 @@ def headlines(request):
     if desired_rss_feed not in RSS_FEEDS:
         desired_rss_feed = "1"
 
-    visited_at = request.COOKIES.get('visited_at')
-
     headlines = get_headlines(desired_rss_feed)
-    formated_headlines = headlines_formater(headlines, visited_at)
+    formated_headlines = headlines_formater(headlines)
     save_headlines(headlines)
-
     response = HttpResponse(formated_headlines)
     response.set_cookie("visited_at", str(datetime.now()), max_age=3600 * 24)
 

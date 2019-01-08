@@ -1,15 +1,30 @@
 <!DOCTYPE html>
+
+{% load static %}
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta charset="UTF-8">
 		<title>Show Me the Headlines!</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
-		<script src="/static/js/rss.js" type="text/javascript"></script>
+		<script src='{% static "/rss/js/rss.js" type="text/javascript" %}'></script>
+		<link href='{% static "/rss/css/rss.css" %}' />
 	</head>
 	<body>
-		<div class="container-fluid">
-
+		<div class="container-fluid welcome">
+            <img src='{% static "rss/images/JrmNews.png" %}'>
+            <div>
+                {% if first_visit %}
+                <h2>Welcome stranger!</h2>
+                {% else %}
+                <h2>Welcome back!</h2>
+                {% endif %}
+                <h3>Want to get the news?</h3>
+                <a href="/rss/api/headlines?feed=1">jPost</a> <br />
+                <a href="/rss/api/headlines?feed=2">DailyMail</a> <br />
+                <a href="/rss/api/headlines?feed=3">Wired</a>
+            </div>
 		</div>
 
 		<div class="copyright">Copyright © 2018-2019 JrmSK, All Rights Reserved.</div>

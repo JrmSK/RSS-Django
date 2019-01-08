@@ -29,11 +29,11 @@ def get_headlines(desired_rss_feed):
     return headlines
 
 
-def headlines_formater(headlines, visited_at):
+def headlines_formater(headlines):
     result = ' '.join([
         '<li>{} - <a href={}>link</a></li>'.format(obj['title'], obj['link'])
         for obj in headlines
-    ]) + '<br /> <p>Visited at: {}</p>'.format(visited_at[:-7])
+    ])
     return result
 
 
