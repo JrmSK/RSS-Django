@@ -2,19 +2,18 @@
 
     {% load static %}
 
-
       {% block content %}
 
 		<div class="container-fluid welcome">
                 <div class="row">
                     <div class="col-4">
-                        <img class="logo" src='{% static "rss/images/JrmNews.png" %}' />
-                        {% if first_visit %}
+                        {% if first_visit == "stranger" %}
                         <h2>Welcome stranger!</h2>
                         {% else %}
-                        <h2>Welcome back!</h2>
+                        <h3>Welcome {{first_visit}}</h3>
                         {% endif %}
-                        <h3>Want to get the news?</h3>
+                        <img class="logo" src='{% static "rss/images/JrmNews.png" %}' />
+                        <h4>Want to get the news?</h4>
                         <a href="/rss/api/headlines?feed=1">jPost</a> <br />
                         <a href="/rss/api/headlines?feed=2">DailyMail</a> <br />
                         <a href="/rss/api/headlines?feed=3">Wired</a>

@@ -58,8 +58,14 @@
               <div> 
                   {% if user.is_authenticated %} 
                   {{ user }} 
-                  <a href="/logout/">Logout</a>  {% else %} 
-                  <a href="/login/">Login</a>  {% endif %} 
+                    <a href="/logout/">Logout</a> 
+                  {% else %} 
+                    <a href="/login/">Login</a> 
+                  {% endif %} 
+                  {% if user.is_staff %} 
+                    <a target="_blank" href="/admin/">Admin</a> 
+                  {% endif %} 
+
               </div>
            </div>
         </li>

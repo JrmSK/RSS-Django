@@ -20,9 +20,9 @@ def index(request):
     # headlines = get_headlines(desired_rss_feed)
     #
     # return render(request, 'rss/rss.html', {"headlines": headlines})
-    first_visit = True
-    if request.COOKIES.get('visited_at'):
-        first_visit = False
+    first_visit = "stranger"
+    if request.user.is_authenticated():
+        first_visit = "back, {}".format(request.user.username)
     response = render(request, 'rss/welcome.html', {'first_visit': first_visit})
     response.set_cookie("visited_at", str(datetime.now()), max_age=3600 * 24)
     return response
