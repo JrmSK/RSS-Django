@@ -10,7 +10,13 @@ if hasattr(ssl, '_create_unverified_context'):
 
 
 def index(request):
-    return render(request, 'rss/index.html')
+    desired_rss_feed = request.GET.get("feed")
+    if desired_rss_feed not in RSS_FEEDS:
+        desired_rss_feed = "1"
+
+    headlines = get_headlines(desired_rss_feed)
+
+    return render(request, 'rss/rss.html', {"headlines": headlines})
 
 
 def feeds(request):
@@ -25,7 +31,6 @@ def headlines(request):
         desired_rss_feed = "1"
 
     visited_at = request.COOKIES.get('visited_at')
-
 
     headlines = get_headlines(desired_rss_feed)
     formated_headlines = headlines_formater(headlines, visited_at)
