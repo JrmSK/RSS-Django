@@ -19,7 +19,7 @@
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
     crossorigin="anonymous"></script>
-  <link href='{% static "/rss/css/rss.css" %}' />
+  <link rel="stylesheet" type="text/css" href="{% static '/rss/css/rss.css' %}" />
 </head>
 
 <body>
@@ -58,17 +58,22 @@
         {% endif %}
         <div class="navbar-nav row">
           <li class="justify-content-end" style="position:absolute;right:0px">
-            <div class="nav-link" href="#" tabindex="-1">
+            <div id="last-nav-link" class="nav-link" href="#" tabindex="-1">
               <div id="right-nav">
                 {% if user.is_authenticated %}
                 {{ user }}
-                <a href="/logout/">Logout</a>
-                {% else %}
-                <a href="/login/">Login</a>
-                {% endif %}
+                <a id="logout-button" href="/logout/">Logout</a>
                 {% if user.is_staff %}
                 <a target="_blank" href="/admin/">Admin</a>
                 {% endif %}
+                <form class="form-inline my-2 my-lg-0">
+                  <input id="search-headlines" class="form-control mr-sm-2" type="search" placeholder="Search headlines" aria-label="Search">
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                {% else %}
+                <a href="/login/">Login</a>
+                {% endif %}
+
               </div>
             </div>
           </li>

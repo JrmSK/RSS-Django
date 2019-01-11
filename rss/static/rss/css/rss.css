@@ -1,0 +1,17 @@
+.nav-link #right-nav{
+    display: flex;
+    flex-direction: row;
+}
+
+#search-headlines {
+    margin-left: 10px;
+}
+
+#logout-button{
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#last-nav-link{
+    margin-top: -8px;
+}
