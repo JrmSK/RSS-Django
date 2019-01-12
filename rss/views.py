@@ -1,15 +1,18 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.shortcuts import render, HttpResponse
 from datetime import datetime
 import ssl
 from .utils import get_headlines, save_headlines, RSS_FEEDS
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from .forms import SearchForm
+from .models import Headlines
 
 
 # necessary for mac users
 if hasattr(ssl, '_create_unverified_context'):
     ssl._create_default_https_context = ssl._create_unverified_context
+
 
 def index(request):
 
@@ -27,11 +30,13 @@ def index(request):
     response.set_cookie("visited_at", str(datetime.now()), max_age=3600 * 24)
     return response
 
+
 @login_required
 def feeds(request):
     result = ['{}: {} - {}'.format(feed, RSS_FEEDS[feed]['title'], RSS_FEEDS[feed]['rss_link']) for feed in RSS_FEEDS]
     print(result)
     return render(request, 'rss/chooseFeed.html', {'result': result})
+
 
 @login_required
 def headlines(request):
@@ -46,6 +51,7 @@ def headlines(request):
 
     return response
 
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -56,3 +62,13 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, "registration/register.html", {"form": form})
+
+
+@login_required
+def search(request):
+    query = request.POST.get('find_headlines').split(' ')
+    search_result = Headlines.objects.filter(title__icontains=query[0]).order_by('time_added')
+    if len(query) > 1:
+        for i in range(1, len(query)):
+            search_result = search_result.filter(title__icontains=query[i])
+    return render(request, 'rss/search.html', {'context': search_result})

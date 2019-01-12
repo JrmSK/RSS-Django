@@ -19,6 +19,7 @@ from django.contrib.auth.views import login, logout
 
 
 urlpatterns = [
+    url('', include('rss.urls')),
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout, kwargs={'next_page': '/rss'}, name='logout'),
     url(r'^rss/', include('rss.urls')),
